@@ -29,14 +29,23 @@ def timesheet_writer(timesheet_string):
 	fh.close()
 
 def remove_blank_lines():
-	fh = open(TIMESHEET_FILE, "wr")
+	fh = open(TIMESHEET_FILE, "r+")
 	empty_lines_counter = 0
 	lines = fh.readlines()
 	for line in lines[:-30:-1]:
-		if line.strip() == "\n":
+		if line.strip() == "":
 			empty_lines_counter += 1
+			print empty_lines_counter
+		elif empty_lines_counter > 0:
+			fh.close()
+			fh = open(TIMESHEET_FILE, "w")
+			fh.writelines(lines[:-empty_lines_counter - 1 ])
+			fh.write(line[:-1])
+			break
 		else:
-			fh.write(lines[:-empty_lines_counter])
-	raise ValueError("the last 30 strings in timesheet are too short")
+			print "break line: " + line
+			break
+	fh.close()
+	# raise ValueError("the last 30 strings in timesheet are too short")
 # timesheet_writer("trololo")
 remove_blank_lines()
