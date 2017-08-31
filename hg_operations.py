@@ -30,6 +30,9 @@ def timesheet_string_formater(element, time1):
 
 def hg_log_reader():
     #hg_log_string = check_output(["hg", "log", "-u", USER, "-l10"], cwd = "/home/atugaenko/userver")
+	today_dt = datetime.now()
+	today_str = today_dt.strftime("%Y-%m-%d")
+    hg_log_string = check_output(["hg", "log", "-u", USER, "-d", today_str], cwd = "/home/atugaenko/userver")
     return log_output()
 
 def hg_branch_reader():
@@ -37,7 +40,7 @@ def hg_branch_reader():
     return "RT123456"
     
 def log_parser(log_string):
-	chunk_list = list()
+	log_chunks_list = list()
 	log_list = log_string.split("\n\n")
 	for log_chunk in log_list:
 		branch, date, text = None, None, None
@@ -55,8 +58,8 @@ def log_parser(log_string):
 			if dt.date() < datetime.now().date():
 				break
 			log_el = log_element(branch, dt, text)
-			chunk_list.insert(0, (log_el))
-	return chunk_list
+			log_chunks_list.insert(0, (log_el))
+	return log_chunks_list
 
 def branch_formater(name):
 	if name[0:2] == "RT":

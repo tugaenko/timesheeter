@@ -3,13 +3,17 @@ from timesheet_operations import *
 from hg_operations import *
 
 def main_workflow():
-	chunk_list = log_parser(hg_log_reader())
+	hg_log = hg_log_reader()
+	log_chunks_list = log_parser(hg_log)
 	time1, is_new_day =  get_start_time() # new_day adds empty line
 
-	if is_new_day:
-		timesheet_writer("\n")
+	trim_short_lines()
 	
-	for el in chunk_list:
+	if is_new_day:
+		timesheet_writer("")
+
+	
+	for el in log_chunks_list:
 		timesheet_writer(timesheet_string_formater(el, time1))
 		time1 = el.get_datetime().strftime("%H:%M")
 
