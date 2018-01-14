@@ -16,8 +16,8 @@ def __get_expicit_start_time():
 	for line in lines[ : -LINES_TO_REMOVE : -1]:
 		clean_line = line.strip()
 		if len(clean_line) == 4 and clean_line.isdigit():
-			# start_time_dt = datetime.strptime(line, "%H%M")
-			return clean_line[:2] + ":" + clean_line[2:]
+			return datetime.strptime(line, "%H%M")        # TODO try/except
+			# return clean_line[:2] + ":" + clean_line[2:]
 		elif len(line) > SHORT_LINE:
 			break
 
@@ -35,7 +35,7 @@ def get_start_time():
 		if explicit_start_time:
 			return explicit_start_time, True
 		else:
-			return ARRIVAL, True
+			return datetime.strptime(ARRIVAL, "%H:%M"), True
 	return timesheet_dt.strftime("%H:%M"), False
 
 def timesheet_writer(timesheet_string):
@@ -85,3 +85,5 @@ def trim_short_lines():
 # trim_blank_lines()
 
 # print __get_expicit_start_time()
+
+print datetime.strptime(ARRIVAL, "%H:%M")

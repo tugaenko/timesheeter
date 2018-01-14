@@ -2,7 +2,7 @@ from datetime import datetime
 from subprocess import *
 
 from constants import *
-from log_mock import *
+import log_mock
 
 class log_element:
 	def	__init__(self, branch, date, text):
@@ -28,16 +28,19 @@ def timesheet_string_formater(element, time1):
 	string_list = [date, time1, time2, QUEUE, branch, '"' + text + '"']
 	return ",".join(string_list)
 
-def hg_log_reader():
-    #hg_log_string = check_output(["hg", "log", "-u", USER, "-l10"], cwd = "/home/atugaenko/userver")
+def hg_log_reader(mock_flag):
+	if mock_flag:
+		return log_mock.log_output()
 	today_dt = datetime.now()
 	today_str = today_dt.strftime("%Y-%m-%d")
-    hg_log_string = check_output(["hg", "log", "-u", USER, "-d", today_str], cwd = "/home/atugaenko/userver")
-    return log_output()
+	hg_log_string = check_output(["hg", "log", "-u", USER, "-d", today_str], cwd = MAIN_REPO_PATH)
+	return hg_log_string
 
-def hg_branch_reader():
-    # hg_branch_string = check_output(["hg", "branch"], cwd = "/home/atugaenko/userver")
-    return "RT123456"
+def hg_branch_reader(mock_flag):
+    if mock_flag:
+    	return "RT123456"
+    hg_branch_string = check_output(["hg", "branch"], cwd = MAIN_REPO_PATH)
+    return hg_branch_string
     
 def log_parser(log_string):
 	log_chunks_list = list()
